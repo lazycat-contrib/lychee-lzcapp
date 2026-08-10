@@ -1,0 +1,51 @@
+version: 1
+
+project:
+  root: .
+  build_config: lzc-build.yml
+  package_file: package.yml
+  output: output/application.lpk
+  target_arch: amd64
+
+update:
+  strategy: publish
+  allow_downgrade: false
+  version_source:
+    type: image
+    image: lychee
+
+build:
+  run_buildscript: false
+
+images:
+  - id: lychee
+    target: service
+    service: lychee
+    source: docker.io/linuxserver/lychee
+    channel: stable
+    sort: semver
+    tag_regex: '^\d+\.\d+\.\d+$'
+    delivery:
+      mode: mirror
+      image_template: docker.1ms.run/linuxserver/lychee:{tag}
+      require_digest_match: true
+  - id: mariadb
+    target: service
+    service: lychee-db
+    source: docker.io/library/mariadb
+    channel: stable
+    sort: semver
+    tag_regex: '^10\.11\.\d+$'
+    delivery:
+      mode: mirror
+      image_template: docker.1ms.run/library/mariadb:{tag}
+      require_digest_match: true
+
+stores:
+  official:
+    enabled: false
+  private:
+    enabled: true
+    skip_if_version_exists: true
+    name: Lychee
+    summary: 由 GitHub Actions 自动发布

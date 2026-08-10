@@ -1,0 +1,17 @@
+package: cloud.lazycat.app.lychee
+version: 6.4.2
+name: Lychee
+description: 一款易于使用的自托管图片管理工具。
+min_os_version: 1.5.0
+homepage: https://lycheeorg.dev
+author: LycheeOrg
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Lychee
+    description: 一款易于使用的自托管图片管理工具。
+  en:
+    name: Lychee
+    description: An easy-to-use, self-hosted photo-management application.

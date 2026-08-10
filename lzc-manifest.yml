@@ -1,23 +1,14 @@
-lzc-sdk-version: "0.1"
-name: Lychee
-package: cloud.lazycat.app.lychee
-version: 6.4.2
-description: 图片管理工具
-homepage: https://lycheeorg.dev
-author: lychee
 application:
   subdomain: lychee
   background_task: true
-  multi_instance: false
-  gpu_accel: false
-  kvm_accel: false
-  usb_accel: false
   public_path:
     - /
-  routes:
-    - /=http://lychee:80/
+  upstreams:
+    - location: /
+      backend: http://lychee:80/
 services:
   lychee:
+    # docker.io/linuxserver/lychee:6.4.2
     image: docker.hlmirror.com/linuxserver/lychee:6.4.2
     environment:
       - PUID=1000
@@ -27,7 +18,7 @@ services:
       - DB_HOST=lychee-db
       - DB_PORT=3306
       - DB_USERNAME=lychee
-      - DB_PASSWORD=lychee
+      - DB_PASSWORD={{ stable_secret "database_password" }}
       - DB_DATABASE=lychee
       - APP_NAME=Lychee
       - APP_ENV=production
@@ -41,18 +32,17 @@ services:
       - /lzcapp/var/pictures:/pictures
     depends_on:
       - lychee-db
-
   lychee-db:
-    container_name: lychee-db
-    image:  docker.hlmirror.com/mariadb:10.11
+    # docker.io/library/mariadb:10.11
+    image: docker.hlmirror.com/mariadb:10.11
     environment:
-      - MYSQL_ROOT_PASSWORD=lychee
+      - MYSQL_ROOT_PASSWORD={{ stable_secret "database_root_password" }}
       - MYSQL_DATABASE=lychee
       - MYSQL_USER=lychee
-      - MYSQL_PASSWORD=lychee
+      - MYSQL_PASSWORD={{ stable_secret "database_password" }}
     binds:
       - /lzcapp/var/db:/var/lib/mysql
-    health_check:
+    healthcheck:
       test:
         - CMD-SHELL
         - healthcheck.sh --connect --innodb_initialized

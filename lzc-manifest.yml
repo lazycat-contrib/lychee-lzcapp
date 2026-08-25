@@ -35,8 +35,8 @@ services:
       - lychee-db
   lychee-db:
     # docker.io/library/mariadb:10.11
-    # upstream: docker.io/library/mariadb:10.11.18
-    image: docker.1ms.run/library/mariadb:10.11.18
+    # upstream: docker.io/library/mariadb:10.11.19
+    image: docker.1ms.run/library/mariadb:10.11.19
     environment:
       - MYSQL_ROOT_PASSWORD={{ stable_secret "database_root_password" }}
       - MYSQL_DATABASE=lychee
